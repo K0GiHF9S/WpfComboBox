@@ -6,6 +6,7 @@
 	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 	xmlns:local="clr-namespace:WpfComboBox"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	Title="MainWindow"
 	Width="800"
 	Height="450"
@@ -17,10 +18,15 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
 			<ColumnDefinition />
+			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
 		<ListBox Grid.Column="0" ItemsSource="{Binding Names}" />
-		<Grid Grid.Column="1">
+		<ListBox Grid.Column="1" ItemsSource="{Binding NamesCollection}" />
+		<Grid Grid.Column="2">
 			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
@@ -50,6 +56,18 @@
 				Grid.Row="5"
 				Command="{Binding RefleshCommand}"
 				Content="Reflesh" />
+			<Button
+				Grid.Row="6"
+				Command="{Binding AppendCollectionCommand}"
+				Content="AppendCollection" />
+			<Button
+				Grid.Row="7"
+				Command="{Binding DeleteCollectionCommand}"
+				Content="DeleteCollection" />
+			<Button
+				Grid.Row="8"
+				Command="{Binding RefleshCollectionCommand}"
+				Content="RefleshCollection" />
 		</Grid>
 	</Grid>
 </Window>

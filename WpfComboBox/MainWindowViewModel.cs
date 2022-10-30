@@ -6,14 +6,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace WpfComboBox;
 
 internal class MainWindowViewModel : INotifyPropertyChanged
 {
-    public ObservableCollection<string> Names { get; }
+    public record A(string Name);
+    public CompositeObservableCollection<A> NamesCollection { get; }
+    public ObservableCollection<A> Names { get; }
 
-    private string appendName = String.Empty;
+    private string appendName = string.Empty;
 
     public string AppendName
     {
@@ -25,9 +28,9 @@ internal class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    private string selectedName = String.Empty;
+    private A? selectedName;
 
-    public string SelectedName
+    public A? SelectedName
     {
         get => selectedName;
         set
@@ -41,11 +44,21 @@ internal class MainWindowViewModel : INotifyPropertyChanged
     public RelayCommand DeleteCommand { get; }
     public RelayCommand RefleshCommand { get; }
 
+    public RelayCommand AppendCollectionCommand { get; }
+    public RelayCommand DeleteCollectionCommand { get; }
+    public RelayCommand RefleshCollectionCommand { get; }
+
     public MainWindowViewModel()
     {
-        Names = new() { "a", "b", "c" };
-        AppendCommand = new(() => Names.Add(AppendName));
-        DeleteCommand = new(() => Names.Remove(SelectedName));
+        Names = new() { new("a"), new("b"), new("c") };
+        AppendCommand = new(() => Names.Add(new(AppendName)));
+        DeleteCommand = new(() =>
+        {
+            if (SelectedName is not null)
+            {
+                Names.Remove(SelectedName);
+            }
+        });
         RefleshCommand = new(() =>
         {
             var backup = Names.ToArray();
@@ -55,11 +68,19 @@ internal class MainWindowViewModel : INotifyPropertyChanged
                 Names.Add(item);
             }
         });
-        PropertyChanged += MainWindowViewModel_PropertyChanged;
-    }
-
-    private void MainWindowViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+        NamesCollection = new();
+        NamesCollection.Add(Names);
+        AppendCollectionCommand = new(() => NamesCollection.Insert(0, new(new() { new("1"), new("2"), new("3") })));
+        DeleteCollectionCommand = new(() => NamesCollection.RemoveAt(0));
+        RefleshCollectionCommand = new(() =>
+        {
+            CompositeObservableCollection<A> backup = new(NamesCollection);
+            NamesCollection.Clear();
+            for (int i = 0; i < backup.Count; i++)
+            {
+                NamesCollection.Add(backup[i]);
+            }
+        });
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
