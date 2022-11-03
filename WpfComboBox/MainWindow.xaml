@@ -39,7 +39,7 @@
 				ItemsSource="{Binding Names}"
 				SelectedItem="{Binding SelectedName}">
 				<i:Interaction.Behaviors>
-					<local:StoreLastSelectBehavior />
+					<local:StoreLastSelectBehavior Comparer="{StaticResource AEqualityComparer}" />
 				</i:Interaction.Behaviors>
 			</ComboBox>
 			<TextBlock Grid.Row="1" Text="{Binding SelectedName}" />

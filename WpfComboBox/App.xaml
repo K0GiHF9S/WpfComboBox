@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:WpfComboBox"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
-    </Application.Resources>
+		<local:AEqualityComparer x:Key="AEqualityComparer" />
+	</Application.Resources>
 </Application>
